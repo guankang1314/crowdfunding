@@ -324,6 +324,8 @@
                         $("#addModal input[name='name']").val("");
                         initData(1);
                     });
+                }else if ("403"==result){
+                    layer.msg("您无权访问此功能");
                 }else {
                     layer.msg("保存失败");
                 }
@@ -447,6 +449,7 @@
         };
 
         //1.加载数据
+        //多个异步请求执行顺序问题
         var json = {};
         $.get("${PATH}/permission/listAllPermissionTree",json,function(data){
             //data.push({"id":0,"title":"系统权限","icon":"glyphicon glyphicon-asterisk"});

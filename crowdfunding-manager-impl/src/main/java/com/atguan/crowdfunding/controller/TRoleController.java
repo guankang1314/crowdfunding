@@ -11,6 +11,7 @@ import org.omg.CORBA.INTERNAL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,6 +61,7 @@ public class TRoleController {
     }
 
 
+    @PreAuthorize("hasRole('PM - 项目经理')")
     @ResponseBody
     @RequestMapping("/role/doAdd")
     public String doAdd(TRole role) {

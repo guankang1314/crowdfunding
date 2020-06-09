@@ -10,10 +10,13 @@
 
   <!-- 创建Spring IOC容器 -->
   <!-- needed for ContextLoaderListener -->
-  <context-param>
+  <!--<context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath*:/spring/spring-*.xml</param-value>
   </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>-->
 
   <!-- 字符编码过滤器 -->
   <filter>
@@ -37,11 +40,22 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <!-- 权限过滤Filter -->
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
+
+
 
   <!-- Bootstraps the root web application context before servlet initialization -->
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
+
   <listener>
     <listener-class>com.atguan.crowdfunding.listener.SystemUpInitListener</listener-class>
   </listener>
@@ -56,7 +70,7 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>classpath*:/spring/springmvc.xml</param-value>
+      <param-value>classpath*:/spring/springmvc.xml,classpath*:/spring/spring-*.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

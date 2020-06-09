@@ -10,6 +10,7 @@ import com.atguan.crowdfunding.mapper.TRolePermissionMapper;
 import com.atguan.crowdfunding.service.TRoleService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -50,6 +51,7 @@ public class TRoleServiceImpl implements TRoleService {
         return page;
     }
 
+    //@PreAuthorize("hasRole('PM - 项目经理')")
     @Override
     public void saveTRole(TRole role) {
         roleMapper.insertSelective(role);

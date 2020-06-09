@@ -5,6 +5,15 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
+
+
+  <select id="listRoleByAdminId" resultMap="BaseResultMap">
+    SELECT t_role.* FROM t_role JOIN t_admin_role
+      on t_role.id = t_admin_role.roleid
+      where t_admin_role.adminid=#{adminId};
+  </select>
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">

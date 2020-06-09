@@ -38,7 +38,7 @@ public class DispatchController {
         return "index";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping("/tologin")
     public String login() {
         System.out.println("跳转登录主页面..");
         return "login";
@@ -49,7 +49,7 @@ public class DispatchController {
         System.out.println("跳转后台主页面..");
 
         if (session==null) {
-            return "redirect:/login";
+            return "redirect:/tologin";
         }
         //存放父菜单
         List<TMenu> menuList = (List<TMenu>)session.getAttribute("menuList");
@@ -61,42 +61,42 @@ public class DispatchController {
         return "main";
     }
 
-    @RequestMapping("/logout")
-    public String logout(HttpSession session) {
-        System.out.println("注销系统..");
+//    @RequestMapping("/logout")
+//    public String logout(HttpSession session) {
+//        System.out.println("注销系统..");
+//
+//        if (session!=null) {
+//            session.removeAttribute(Const.LOGIN_ADMIN);
+//            session.invalidate();
+//        }
+//
+//        return "redirect:/index";
+//    }
 
-        if (session!=null) {
-            session.removeAttribute(Const.LOGIN_ADMIN);
-            session.invalidate();
-        }
-
-        return "redirect:/index";
-    }
-
-    @RequestMapping("/dologin")
-    public String dologin(String loginacct, String userpswd, HttpSession session, Model model) {
-        log.debug("开始denlu");
-
-        log.debug("loginacct={}",loginacct);
-        log.debug("userpswd={}",userpswd);
-
-        Map<String,Object> paramMap = new HashMap<>();
-        paramMap.put("loginacct",loginacct);
-        paramMap.put("userpswd",userpswd);
-        try {
-            TAdmin admin = amdinService.getTAdminByLogin(paramMap);
-            session.setAttribute(Const.LOGIN_ADMIN,admin);
-            log.debug("登录成功..");
-            //return "main";
-            return "redirect:/main";
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.debug("登陆失败={}..",e.getMessage());
-            model.addAttribute("message",e.getMessage());
-            return "login";
-        }
-
-
-    }
+//    @RequestMapping("/dologin")
+//    public String dologin(String loginacct, String userpswd, HttpSession session, Model model) {
+//        log.debug("开始denlu");
+//
+//        log.debug("loginacct={}",loginacct);
+//        log.debug("userpswd={}",userpswd);
+//
+//        Map<String,Object> paramMap = new HashMap<>();
+//        paramMap.put("loginacct",loginacct);
+//        paramMap.put("userpswd",userpswd);
+//        try {
+//            TAdmin admin = amdinService.getTAdminByLogin(paramMap);
+//            session.setAttribute(Const.LOGIN_ADMIN,admin);
+//            log.debug("登录成功..");
+//            //return "main";
+//            return "redirect:/main";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.debug("登陆失败={}..",e.getMessage());
+//            model.addAttribute("message",e.getMessage());
+//            return "login";
+//        }
+//
+//
+//    }
 
 }
