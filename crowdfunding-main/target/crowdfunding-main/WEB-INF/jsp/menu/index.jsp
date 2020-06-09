@@ -305,7 +305,7 @@
     // ==删除开始=======================================================
 
     function deleteBtn(id) {
-    
+
         layer.confirm("您确定要删除吗?",{btn:['确定','取消']},function (index) {
 
             $.post("${PATH}/menu/doDelete",{id:id,name:name},function (result) {

@@ -136,6 +136,25 @@
 
 
 
+<!--修改数据 模态框 -->
+<div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">分配权限</h4>
+            </div>
+            <div class="modal-body">
+                <ul id="treeDemo" class="ztree"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="assignBtn" type="button" class="btn btn-primary">分配</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -216,7 +235,7 @@
             content+='  <td><input type="checkbox"></td>';
             content+='  <td>'+e.name+'</td>';
             content+='  <td>';
-            content+='	  <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
+            content+='	  <button type="button" roleId="'+e.id+'" class="assignPermissionClass btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
             content+='	  <button type="button" roleId="'+e.id+'" class="updateClass btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
             content+='	  <button type="button" roleId="'+e.id+'" class="deleteClass btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
             content+='  </td>';
@@ -380,6 +399,115 @@
 
 
     });
+
+
+    //给角色分配权限开始==============================================================
+
+    var roleId = '';
+
+    $("tbody").on('click','.assignPermissionClass',function () {
+
+
+        $("#assignModal").modal({
+            show:true,
+            backdrop:'static',
+            keyboard:false
+        });
+
+        roleId = $(this).attr("roleId");
+
+        initTree();
+    });
+
+
+    function initTree(){
+
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    pIdKey: "pid"
+                },
+                key: {
+                    url: "xUrl",
+                    name:"title"
+                }
+            },
+            view: {
+                addDiyDom: function(treeId,treeNode) {
+                    $("#"+treeNode.tId+"_ico").removeClass();//.addClass();
+                    $("#"+treeNode.tId+"_span").before("<span class='"+treeNode.icon+"'></span>")
+                },
+
+            }
+
+        };
+
+        //1.加载数据
+        //多个异步请求执行顺序问题
+        var json = {};
+        $.get("${PATH}/permission/listAllPermissionTree",json,function(data){
+            //data.push({"id":0,"title":"系统权限","icon":"glyphicon glyphicon-asterisk"});
+
+            var treeObj = $.fn.zTree.init($("#treeDemo"), setting, data);
+            //var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            treeObj.expandAll(true);
+
+            $.get("${PATH}/role/listPermissionIdByRoleId",{roleId:roleId},function(data){
+                $.each(data,function (i,e) {
+
+                    var permissionId = e;
+                    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                    var node = treeObj.getNodeByParam("id", permissionId, null);
+                    treeObj.checkNode(node,true,false,false);
+                });
+            });
+        });
+
+        //回显已分配的许可
+
+
+    }
+
+    $("#assignBtn").click(function () {
+
+        var json = {
+          roleId:roleId
+        };
+
+        console.log(roleId);
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getCheckedNodes(true);
+        $.each(nodes,function (i,e) {
+
+            var permissionId = e.id;
+            console.log(permissionId);
+
+            json['ids['+i+']'] = permissionId;
+        });
+
+        $.ajax({
+           type:"post",
+           url:"${PATH}/role/doAssignPermissionToRole",
+           data:json,
+           success:function (result) {
+
+               if ("ok"==result) {
+                   layer.msg("分配成功",{time:1000},function () {
+
+                       $("#assignModal").modal('hide');
+                   });
+               }else {
+                   layer.msg("分配失败")
+               }
+
+           }
+        });
+    })
+
 
 </script>
 </body>
