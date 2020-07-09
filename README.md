@@ -1,6 +1,6 @@
 # crowdfundingadmin
 # 众筹项目后台管理部分
-<p>
+![SSM](https://img.shields.io/badge/JAVA-1.8+-green.svg )
 <a ><img src="https://img.shields.io/badge/JAVA-1.8+-green.svg "/></a>
 <a href="https://github.com/halo-dev/halo/releases"><img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/halo-dev/halo/total.svg?style=flat-square"></a>
 <a href="https://hub.docker.com/r/ruibaby/halo"><img alt="Docker pulls" src="https://img.shields.io/docker/pulls/ruibaby/halo?style=flat-square"></a>
